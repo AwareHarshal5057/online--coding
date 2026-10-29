@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
 
 def register(request):
     if request.method == "POST":
@@ -36,3 +37,7 @@ def login_view(request):
 def home(request):
     return render(request,"accounts/home.html")
 
+@login_required
+def logout_view(request):
+    logout(request)
+    return redirect("login")
