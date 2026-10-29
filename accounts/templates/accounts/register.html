@@ -1,0 +1,84 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create Account</title>
+
+    <link rel="stylesheet" href="{% static 'accounts/css/style.css' %}">
+</head>
+<body>
+
+    <div class="container">
+
+        <h2>Create Account</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="id_username">Username</label>
+                <input
+                    type="text"
+                    name="username"
+                    id="id_username"
+                    placeholder="Enter username"
+                    maxlength="150"
+                    required
+                >
+
+                {% if form.username.errors %}
+                    <p class="error">{{ form.username.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="id_password1">Password</label>
+                <input
+                    type="password"
+                    name="password1"
+                    id="id_password1"
+                    placeholder="Enter password"
+                    required
+                >
+
+                {% if form.password1.errors %}
+                    <p class="error">{{ form.password1.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="id_password2">Confirm Password</label>
+                <input
+                    type="password"
+                    name="password2"
+                    id="id_password2"
+                    placeholder="Confirm password"
+                    required
+                >
+
+                {% if form.password2.errors %}
+                    <p class="error">{{ form.password2.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            {% if form.non_field_errors %}
+                <div class="error">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <button type="submit">Register</button>
+        </form>
+
+        <p class="login-link">
+            Already have an account?
+            <a href="/accounts/login/">Login</a>
+        </p>
+
+    </div>
+
+</body>
+</html>
