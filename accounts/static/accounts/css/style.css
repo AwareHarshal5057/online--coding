@@ -79,3 +79,16 @@ a {
 a:hover {
     text-decoration: underline;
 }
+
+/* Dashboard Buttons */
+
+.dashboard-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.dashboard-buttons form {
+    margin: 0;
+    padding: 0;
+}
