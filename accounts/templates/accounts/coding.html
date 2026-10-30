@@ -1,22 +1,29 @@
 
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Coding Practice</title>
+
     <link rel="stylesheet" href="{% static 'accounts/css/style.css' %}">
 </head>
+
 <body>
 
     <div class="container">
+
         <h2>Coding Practice</h2>
 
         <p>Welcome to Python Coding Practice!</p>
 
+        <!-- Difficulty Selection -->
         <div class="form-group">
             <label>Select Difficulty</label>
+
             <select name="difficulty">
                 <option value="easy">Easy</option>
                 <option value="medium">Medium</option>
@@ -28,19 +35,71 @@
 
         <h3>Python Questions</h3>
 
+        <!-- Question 1 -->
         <div class="question">
+
             <h4>Question 1: Easy</h4>
-            <p>Write a Python program to check whether a number is even or odd.</p>
+
+            <p>
+                Write a Python program to check whether a number
+                is even or odd.
+            </p>
+
+            <div class="code-editor">
+
+                <h4>Write Your Python Code</h4>
+
+                <textarea rows="8"
+                    placeholder="Write your Python code here..."></textarea>
+
+                <button type="button">Submit Code</button>
+
+            </div>
+
         </div>
 
+        <!-- Question 2 -->
         <div class="question">
+
             <h4>Question 2: Easy</h4>
-            <p>Write a Python program to find the sum of two numbers.</p>
+
+            <p>
+                Write a Python program to find the sum of two numbers.
+            </p>
+
+            <div class="code-editor">
+
+                <h4>Write Your Python Code</h4>
+
+                <textarea rows="8"
+                    placeholder="Write your Python code here..."></textarea>
+
+                <button type="button">Submit Code</button>
+
+            </div>
+
         </div>
 
+        <!-- Question 3 -->
         <div class="question">
+
             <h4>Question 3: Easy</h4>
-            <p>Write a Python program to find the largest of two numbers.</p>
+
+            <p>
+                Write a Python program to find the largest of two numbers.
+            </p>
+
+            <div class="code-editor">
+
+                <h4>Write Your Python Code</h4>
+
+                <textarea rows="8"
+                    placeholder="Write your Python code here..."></textarea>
+
+                <button type="button">Submit Code</button>
+
+            </div>
+
         </div>
 
         <a href="{% url 'home' %}" class="back-dashboard-btn">

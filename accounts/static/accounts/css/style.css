@@ -175,3 +175,73 @@ select {
     box-sizing: border-box;
     background-color: white;
 }
+
+
+
+/* Coding Practice Page */
+
+.question {
+    background-color: #f8fafc;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.question h4 {
+    color: #2563eb;
+    margin-top: 0;
+}
+
+.question p {
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Code Editor */
+
+.code-editor {
+    margin-top: 20px;
+}
+
+.code-editor textarea {
+    width: 100%;
+    min-height: 150px;
+    padding: 12px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-family: Consolas, monospace;
+    font-size: 14px;
+    resize: vertical;
+    background-color: #fff;
+}
+
+.code-editor textarea:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+
+.code-editor button {
+    margin-top: 12px;
+}
+
+/* Difficulty Dropdown */
+
+select {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    background-color: white;
+}
+
+/* Horizontal Line */
+
+hr {
+    border: none;
+    border-top: 1px solid #ddd;
+    margin: 25px 0;
+}
+
