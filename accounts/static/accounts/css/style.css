@@ -136,3 +136,42 @@ a:hover {
     color: white;
     text-decoration: none;
 }
+
+
+
+/* Coding Practice Questions */
+
+.question {
+    background-color: #f8fafc;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 20px;
+}
+
+.question h4 {
+    color: #2563eb;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.question p {
+    color: #333;
+    line-height: 1.6;
+    margin-bottom: 0;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #ddd;
+    margin: 25px 0;
+}
+
+select {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    background-color: white;
+}
