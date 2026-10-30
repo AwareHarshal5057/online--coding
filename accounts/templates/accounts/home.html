@@ -21,8 +21,10 @@
 
         <div class="dashboard-buttons">
 
-            <button type="button">Start Coding</button>
-            <br><br>
+           <a href="{% url 'coding' %}" class="start-coding-btn">
+              Start Coding
+           </a>
+
             <form method="POST" action="{% url 'logout' %}">
                 {% csrf_token %}
                 <button type="submit">Logout</button>

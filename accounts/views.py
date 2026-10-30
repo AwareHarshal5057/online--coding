@@ -44,3 +44,8 @@ def logout_view(request):
         logout(request)
         return redirect("login")
     return redirect("home")
+
+
+@login_required
+def coding(request):
+    return render(request, "accounts/coding.html")

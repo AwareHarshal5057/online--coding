@@ -92,3 +92,47 @@ a:hover {
     margin: 0;
     padding: 0;
 }
+
+.start-coding-btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background-color: #2563eb;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 3px;
+}
+
+.start-coding-btn:hover {
+    background-color: #1d4ed8;
+    color: white;
+    text-decoration: none;
+}
+
+.back-dashboard-btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background-color: #2563eb;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.back-dashboard-btn:hover {
+    background-color: #1d4ed8;
+    color: white;
+    text-decoration: none;
+}
