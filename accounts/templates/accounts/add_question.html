@@ -1,0 +1,63 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Add Question</title>
+
+    <link rel="stylesheet" href="{% static 'accounts/css/style.css' %}">
+</head>
+<body>
+
+    <div class="container">
+
+        <h2>Add New Question</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label>Question Title</label>
+                <input
+                    type="text"
+                    name="title"
+                    placeholder="Enter question title"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label>Question Description</label>
+                <textarea
+                    name="description"
+                    rows="6"
+                    placeholder="Enter question description"
+                    required
+                ></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Difficulty</label>
+
+                <select name="difficulty" required>
+                    <option value="Easy">Easy</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Hard">Hard</option>
+                </select>
+            </div>
+
+            <button type="submit">Save Question</button>
+
+        </form>
+
+        <a href="{% url 'coding' %}" class="back-dashboard-btn">
+            Back to Questions
+        </a>
+
+    </div>
+
+</body>
+</html>

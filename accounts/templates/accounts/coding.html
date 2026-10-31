@@ -1,30 +1,37 @@
-
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Coding Practice</title>
-
     <link rel="stylesheet" href="{% static 'accounts/css/style.css' %}">
 </head>
-
 <body>
 
     <div class="container">
 
         <h2>Coding Practice</h2>
 
+        <a href="{% url 'add_question' %}" class="start-coding-btn">
+             + Add New Question
+        </a>
+
+      {% if message %}
+        <div class="submission-message">
+           <h3>{{ message }}</h3>
+
+            {% if question %}
+                <p>Submitted: {{ question }}</p>
+            {% endif %}
+        </div>
+      {% endif %}
+
         <p>Welcome to Python Coding Practice!</p>
 
-        <!-- Difficulty Selection -->
         <div class="form-group">
-            <label>Select Difficulty</label>
-
-            <select name="difficulty">
+            <label for="difficulty">Select Difficulty</label>
+            <select name="difficulty" id="difficulty">
                 <option value="easy">Easy</option>
                 <option value="medium">Medium</option>
                 <option value="hard">Hard</option>
@@ -35,71 +42,69 @@
 
         <h3>Python Questions</h3>
 
-        <!-- Question 1 -->
+       
         <div class="question">
-
             <h4>Question 1: Easy</h4>
-
-            <p>
-                Write a Python program to check whether a number
-                is even or odd.
-            </p>
+            <p>Write a Python program to check whether a number is even or odd.</p>
 
             <div class="code-editor">
-
                 <h4>Write Your Python Code</h4>
 
-                <textarea rows="8"
-                    placeholder="Write your Python code here..."></textarea>
+                <form method="POST" action="{% url 'coding' %}">
+                    {% csrf_token %}
 
-                <button type="button">Submit Code</button>
+                    <textarea name="code" rows="8"
+                        placeholder="Write your Python code here..."
+                        required></textarea>
 
+                    <input type="hidden" name="question" value="Question 1">
+
+                    <button type="submit">Submit Code</button>
+                </form>
             </div>
-
         </div>
 
-        <!-- Question 2 -->
         <div class="question">
-
             <h4>Question 2: Easy</h4>
-
-            <p>
-                Write a Python program to find the sum of two numbers.
-            </p>
+            <p>Write a Python program to find the sum of two numbers.</p>
 
             <div class="code-editor">
-
                 <h4>Write Your Python Code</h4>
 
-                <textarea rows="8"
-                    placeholder="Write your Python code here..."></textarea>
+                <form method="POST" action="{% url 'coding' %}">
+                    {% csrf_token %}
 
-                <button type="button">Submit Code</button>
+                    <textarea name="code" rows="8"
+                        placeholder="Write your Python code here..."
+                        required></textarea>
 
+                    <input type="hidden" name="question" value="Question 2">
+
+                    <button type="submit">Submit Code</button>
+                </form>
             </div>
-
         </div>
 
-        <!-- Question 3 -->
+      
         <div class="question">
-
             <h4>Question 3: Easy</h4>
-
-            <p>
-                Write a Python program to find the largest of two numbers.
-            </p>
+            <p>Write a Python program to find the largest of two numbers.</p>
 
             <div class="code-editor">
-
                 <h4>Write Your Python Code</h4>
 
-                <textarea rows="8"
-                    placeholder="Write your Python code here..."></textarea>
+                <form method="POST" action="{% url 'coding' %}">
+                    {% csrf_token %}
 
-                <button type="button">Submit Code</button>
+                    <textarea name="code" rows="8"
+                        placeholder="Write your Python code here..."
+                        required></textarea>
 
+                    <input type="hidden" name="question" value="Question 3">
+
+                    <button type="submit">Submit Code</button>
+                </form>
             </div>
-
         </div>
 
         <a href="{% url 'home' %}" class="back-dashboard-btn">
