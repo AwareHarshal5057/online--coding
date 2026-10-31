@@ -59,6 +59,10 @@
                     <strong>Difficulty:</strong> {{ q.difficulty }}
                 </p>
 
+                <a href="{% url 'edit_question' q.id %}" class="start-coding-btn">
+                  Edit Question
+                </a>
+
             </div>
 
         {% empty %}

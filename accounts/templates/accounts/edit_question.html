@@ -1,0 +1,62 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Question</title>
+
+    <link rel="stylesheet" href="{% static 'accounts/css/style.css' %}">
+</head>
+<body>
+
+    <div class="container">
+
+        <h2>Update Question</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label>Question Title</label>
+                <input
+                    type="text"
+                    name="title"
+                    value="{{ question.title }}"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label>Question Description</label>
+                <textarea
+                    name="description"
+                    rows="6"
+                    required
+                >{{ question.description }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Difficulty</label>
+
+                <select name="difficulty" required>
+                    <option value="Easy" {% if question.difficulty == "Easy" %}selected{% endif %}>Easy</option>
+                    <option value="Medium" {% if question.difficulty == "Medium" %}selected{% endif %}>Medium</option>
+                    <option value="Hard" {% if question.difficulty == "Hard" %}selected{% endif %}>Hard</option>
+                </select>
+            </div>
+
+            <button type="submit">Update Question</button>
+
+        </form>
+
+        <a href="{% url 'coding' %}" class="back-dashboard-btn">
+            Back to Questions
+        </a>
+
+    </div>
+
+</body>
+</html>
