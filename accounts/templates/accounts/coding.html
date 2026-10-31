@@ -1,4 +1,6 @@
+
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,98 +16,56 @@
         <h2>Coding Practice</h2>
 
         <a href="{% url 'add_question' %}" class="start-coding-btn">
-             + Add New Question
+            + Add New Question
         </a>
-
-      {% if message %}
-        <div class="submission-message">
-           <h3>{{ message }}</h3>
-
-            {% if question %}
-                <p>Submitted: {{ question }}</p>
-            {% endif %}
-        </div>
-      {% endif %}
 
         <p>Welcome to Python Coding Practice!</p>
 
-        <div class="form-group">
-            <label for="difficulty">Select Difficulty</label>
-            <select name="difficulty" id="difficulty">
-                <option value="easy">Easy</option>
-                <option value="medium">Medium</option>
-                <option value="hard">Hard</option>
-            </select>
-        </div>
+        <form method="GET">
+            <div class="form-group">
+                <label for="difficulty">Select Difficulty</label>
+
+                <select name="difficulty" id="difficulty" onchange="this.form.submit()">
+
+                    <option value="Easy" {% if selected_difficulty == "Easy" %}selected{% endif %}>
+                        Easy
+                    </option>
+
+                    <option value="Medium" {% if selected_difficulty == "Medium" %}selected{% endif %}>
+                        Medium
+                    </option>
+
+                    <option value="Hard" {% if selected_difficulty == "Hard" %}selected{% endif %}>
+                        Hard
+                    </option>
+
+                </select>
+            </div>
+        </form>
 
         <hr>
 
         <h3>Python Questions</h3>
 
-       
-        <div class="question">
-            <h4>Question 1: Easy</h4>
-            <p>Write a Python program to check whether a number is even or odd.</p>
+        {% for q in questions %}
 
-            <div class="code-editor">
-                <h4>Write Your Python Code</h4>
+            <div class="question">
 
-                <form method="POST" action="{% url 'coding' %}">
-                    {% csrf_token %}
+                <h4>{{ q.title }}</h4>
 
-                    <textarea name="code" rows="8"
-                        placeholder="Write your Python code here..."
-                        required></textarea>
+                <p>{{ q.description }}</p>
 
-                    <input type="hidden" name="question" value="Question 1">
+                <p>
+                    <strong>Difficulty:</strong> {{ q.difficulty }}
+                </p>
 
-                    <button type="submit">Submit Code</button>
-                </form>
             </div>
-        </div>
 
-        <div class="question">
-            <h4>Question 2: Easy</h4>
-            <p>Write a Python program to find the sum of two numbers.</p>
+        {% empty %}
 
-            <div class="code-editor">
-                <h4>Write Your Python Code</h4>
+            <p>No questions available for this difficulty.</p>
 
-                <form method="POST" action="{% url 'coding' %}">
-                    {% csrf_token %}
-
-                    <textarea name="code" rows="8"
-                        placeholder="Write your Python code here..."
-                        required></textarea>
-
-                    <input type="hidden" name="question" value="Question 2">
-
-                    <button type="submit">Submit Code</button>
-                </form>
-            </div>
-        </div>
-
-      
-        <div class="question">
-            <h4>Question 3: Easy</h4>
-            <p>Write a Python program to find the largest of two numbers.</p>
-
-            <div class="code-editor">
-                <h4>Write Your Python Code</h4>
-
-                <form method="POST" action="{% url 'coding' %}">
-                    {% csrf_token %}
-
-                    <textarea name="code" rows="8"
-                        placeholder="Write your Python code here..."
-                        required></textarea>
-
-                    <input type="hidden" name="question" value="Question 3">
-
-                    <button type="submit">Submit Code</button>
-                </form>
-            </div>
-        </div>
+        {% endfor %}
 
         <a href="{% url 'home' %}" class="back-dashboard-btn">
             Back to Dashboard

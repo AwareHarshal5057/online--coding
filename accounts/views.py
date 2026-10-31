@@ -48,15 +48,8 @@ def logout_view(request):
 
 @login_required
 def coding(request):
-    submitted_code = ""
-    question = ""
-    message = ""
 
-    difficulty = (
-        request.GET.get("difficulty")
-        or request.POST.get("difficulty")
-        or "Easy"
-    )
+    difficulty = request.GET.get("difficulty", "Easy")
 
     if difficulty not in ["Easy", "Medium", "Hard"]:
         difficulty = "Easy"
@@ -65,19 +58,7 @@ def coding(request):
         difficulty=difficulty
     )
 
-    if request.method == "POST":
-        submitted_code = request.POST.get("code", "")
-        question = request.POST.get("question", "")
-
-        if submitted_code.strip():
-            message = "Code submitted successfully!"
-        else:
-            message = "Please write some code first."
-
     return render(request, "accounts/coding.html", {
-        "submitted_code": submitted_code,
-        "question": question,
-        "message": message,
         "questions": questions,
         "selected_difficulty": difficulty,
     })
@@ -85,19 +66,41 @@ def coding(request):
 
 @login_required
 def add_question(request):
-
     if request.method == "POST":
-
         title = request.POST.get("title")
         description = request.POST.get("description")
         difficulty = request.POST.get("difficulty")
 
-        CodingQuestion.objects.create(
-            title=title,
-            description=description,
-            difficulty=difficulty
-        )
+        if title and description and difficulty:
+            question = CodingQuestion(
+                title=title,
+                description=description,
+                difficulty=difficulty
+            )
+            question.save()
 
-        return redirect("coding")
+            messages.success(request, "Question added successfully!")
+            return redirect("coding")
+
+        messages.error(request, "Please fill all fields.")
 
     return render(request, "accounts/add_question.html")
+
+
+@login_required
+def edit_question(request, id):
+    question = CodingQuestion.objects.get(id=id)
+
+    if request.method == "POST":
+        question.title = request.POST.get("title")
+        question.description = request.POST.get("description")
+        question.difficulty = request.POST.get("difficulty")
+
+        question.save()
+
+        messages.success(request, "Question updated successfully!")
+        return redirect("coding")
+
+    return render(request, "accounts/edit_question.html", {
+        "question": question
+    })    
