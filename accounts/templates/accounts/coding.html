@@ -6,26 +6,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coding Practice</title>
+
+    <title>Coding Practice | CodePractice</title>
+
     <link rel="stylesheet" href="{% static 'accounts/css/style.css' %}">
 </head>
+
 <body>
 
-    <div class="container">
+    <nav class="coding-navbar">
+        <div class="coding-logo">CodePractice</div>
 
-        <h2>Coding Practice</h2>
-
-        <a href="{% url 'add_question' %}" class="start-coding-btn">
-            + Add New Question
+        <a href="{% url 'home' %}" class="nav-home-btn">
+            Dashboard
         </a>
+    </nav>
 
-        <p>Welcome to Python Coding Practice!</p>
+    <main class="coding-container">
 
-        <form method="GET">
-            <div class="form-group">
-                <label for="difficulty">Select Difficulty</label>
+        <section class="coding-header">
+            <div>
+                <h1>Coding Practice</h1>
+                <p>Practice Python questions and improve your programming skills.</p>
+            </div>
 
-                <select name="difficulty" id="difficulty" onchange="this.form.submit()">
+            <a href="{% url 'add_question' %}" class="add-question-btn">
+                + Add New Question
+            </a>
+        </section>
+
+        <section class="filter-section">
+
+            <div>
+                <h3>Practice Questions</h3>
+                <p>Select a difficulty level to explore questions.</p>
+            </div>
+
+            <form method="GET" class="difficulty-form">
+                <label for="difficulty">Difficulty Level</label>
+
+                <select name="difficulty"
+                        id="difficulty"
+                        onchange="this.form.submit()">
 
                     <option value="Easy" {% if selected_difficulty == "Easy" %}selected{% endif %}>
                         Easy
@@ -40,42 +62,69 @@
                     </option>
 
                 </select>
-            </div>
-        </form>
+            </form>
 
-        <hr>
+        </section>
 
-        <h3>Python Questions</h3>
+        <section class="questions-list">
 
-        {% for q in questions %}
+            {% for q in questions %}
 
-            <div class="question">
+                <div class="coding-question-card">
 
-                <h4>{{ q.title }}</h4>
+                    <div class="question-content">
 
-                <p>{{ q.description }}</p>
+                        <h3>{{ q.title }}</h3>
 
-                <p>
-                    <strong>Difficulty:</strong> {{ q.difficulty }}
-                </p>
+                        <p>{{ q.description }}</p>
 
-                <a href="{% url 'edit_question' q.id %}" class="start-coding-btn">
-                  Edit Question
-                </a>
+                        <span class="difficulty-badge difficulty-{{ q.difficulty|lower }}">
+                            {{ q.difficulty }}
+                        </span>
 
-            </div>
+                    </div>
 
-        {% empty %}
+                    <div class="question-actions">
 
-            <p>No questions available for this difficulty.</p>
+                        <a href="{% url 'edit_question' q.id %}"
+                           class="edit-question-btn">
+                            Edit
+                        </a>
 
-        {% endfor %}
+                        <form method="POST"
+                              action="{% url 'delete_question' q.id %}">
+                            {% csrf_token %}
 
-        <a href="{% url 'home' %}" class="back-dashboard-btn">
-            Back to Dashboard
-        </a>
+                            <button type="submit"
+                                    class="delete-question-btn"
+                                    onclick="return confirm('Are you sure you want to delete this question?')">
+                                Delete
+                            </button>
+                        </form>
 
-    </div>
+                    </div>
+
+                </div>
+
+            {% empty %}
+
+                <div class="empty-questions">
+                    <h3>No Questions Available</h3>
+                    <p>There are no questions for this difficulty level.</p>
+                    <a href="{% url 'add_question' %}" class="add-question-btn">
+                        Add Your First Question
+                    </a>
+                </div>
+
+            {% endfor %}
+
+        </section>
+
+    </main>
+
+    <footer class="coding-footer">
+        © 2026 CodePractice. All rights reserved.
+    </footer>
 
 </body>
 </html>

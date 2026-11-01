@@ -10,4 +10,5 @@ urlpatterns = [
     path("coding/", views.coding, name="coding"),
     path("add-question/", views.add_question, name="add_question"),
     path("edit-question/<int:id>/", views.edit_question, name="edit_question"),
+    path("delete-question/<int:id>/", views.delete_question, name="delete_question"),
 ]

@@ -1,38 +1,78 @@
+
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Dashboard</title>
+    <title>Dashboard | CodePractice</title>
 
     <link rel="stylesheet" href="{% static 'accounts/css/style.css' %}">
 </head>
+
 <body>
 
-    <div class="container">
+    <nav class="navbar">
+        <div class="logo">CodePractice</div>
 
-        <h2>Welcome to Coding Platform!</h2>
+        <form method="POST" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="logout-btn">Logout</button>
+        </form>
+    </nav>
 
-        <p>Hello, {{ request.user.username }}!</p>
+    <main class="dashboard">
 
-        <p>Welcome to your dashboard.</p>
+        <section class="welcome">
+            <h1>Welcome, {{ request.user.username }}!</h1>
 
-        <div class="dashboard-buttons">
+            <p>
+                Welcome to your coding dashboard.
+                Practice programming questions and improve your coding skills.
+            </p>
 
-           <a href="{% url 'coding' %}" class="start-coding-btn">
-              Start Coding
-           </a>
+            <a href="{% url 'coding' %}" class="start-btn">
+                Start Coding →
+            </a>
+        </section>
 
-            <form method="POST" action="{% url 'logout' %}">
-                {% csrf_token %}
-                <button type="submit">Logout</button>
-            </form>
+        <h2 class="section-title">Dashboard Overview</h2>
 
-        </div>
+        <section class="cards">
 
-    </div>
+            <div class="card">
+                <h3>💻 Coding Practice</h3>
+                <p>
+                    Practice different programming questions
+                    and improve your coding knowledge.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>📚 Python Questions</h3>
+                <p>
+                    Learn Python by solving questions
+                    from different difficulty levels.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>🎯 Improve Skills</h3>
+                <p>
+                    Develop problem-solving skills through
+                    regular coding practice.
+                </p>
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer>
+        © 2026 CodePractice. All rights reserved.
+    </footer>
 
 </body>
 </html>

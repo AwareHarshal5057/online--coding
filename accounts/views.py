@@ -104,3 +104,14 @@ def edit_question(request, id):
     return render(request, "accounts/edit_question.html", {
         "question": question
     })    
+
+
+@login_required
+def delete_question(request, id):
+    question = CodingQuestion.objects.get(id=id)
+
+    if request.method == "POST":
+        question.delete()
+        messages.success(request, "Question deleted successfully!")
+
+    return redirect("coding")
