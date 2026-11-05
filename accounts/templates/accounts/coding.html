@@ -66,6 +66,14 @@
 
         </section>
 
+        {% if messages %}
+            {% for message in messages %}
+                <div class="submission-message">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
         <section class="questions-list">
 
             {% for q in questions %}
@@ -104,13 +112,47 @@
 
                     </div>
 
+                    <!-- Python Code Editor -->
+
+                    <div class="python-editor">
+
+                        <h3>Write Your Python Code</h3>
+
+                        <form method="POST" action="{% url 'coding' %}">
+
+                            {% csrf_token %}
+
+                            <input type="hidden"
+                                   name="question_id"
+                                   value="{{ q.id }}">
+
+                            <input type="hidden"
+                                   name="difficulty"
+                                   value="{{ selected_difficulty }}">
+
+                            <textarea
+                                name="submitted_code"
+                                class="python-code-input"
+                                placeholder="# Write your Python code here..."
+                                required></textarea>
+
+                            <button type="submit" class="submit-code-btn">
+                                Submit Code
+                            </button>
+
+                        </form>
+
+                    </div>
+
                 </div>
 
             {% empty %}
 
                 <div class="empty-questions">
                     <h3>No Questions Available</h3>
+
                     <p>There are no questions for this difficulty level.</p>
+
                     <a href="{% url 'add_question' %}" class="add-question-btn">
                         Add Your First Question
                     </a>
