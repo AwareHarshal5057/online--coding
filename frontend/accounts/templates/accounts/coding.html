@@ -3,6 +3,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,159 +15,195 @@
 
 <body>
 
+    <!-- Navbar -->
     <nav class="coding-navbar">
-        <div class="coding-logo">CodePractice</div>
+
+        <div class="coding-logo">
+            CodePractice
+        </div>
 
         <a href="{% url 'home' %}" class="nav-home-btn">
             Dashboard
         </a>
+
     </nav>
+
 
     <main class="coding-container">
 
+        <!-- Page Header -->
         <section class="coding-header">
+
             <div>
                 <h1>Coding Practice</h1>
-                <p>Practice Python questions and improve your programming skills.</p>
+
+                <p>
+                    Practice Python questions and improve your programming skills.
+                </p>
             </div>
 
-            <a href="{% url 'add_question' %}" class="add-question-btn">
+            <button type="button" class="add-question-btn" id="openAddQuestion">
                 + Add New Question
-            </a>
+            </button>
+
         </section>
 
+
+        <!-- Difficulty Filter -->
         <section class="filter-section">
 
             <div>
                 <h3>Practice Questions</h3>
-                <p>Select a difficulty level to explore questions.</p>
+
+                <p>
+                    Select a difficulty level to explore questions.
+                </p>
             </div>
 
-            <form method="GET" class="difficulty-form">
-                <label for="difficulty">Difficulty Level</label>
+            <div class="difficulty-form">
 
-                <select name="difficulty"
-                        id="difficulty"
-                        onchange="this.form.submit()">
+                <label for="difficulty">
+                    Difficulty Level
+                </label>
 
-                    <option value="Easy" {% if selected_difficulty == "Easy" %}selected{% endif %}>
-                        Easy
-                    </option>
+                <select id="difficulty">
 
-                    <option value="Medium" {% if selected_difficulty == "Medium" %}selected{% endif %}>
-                        Medium
-                    </option>
-
-                    <option value="Hard" {% if selected_difficulty == "Hard" %}selected{% endif %}>
-                        Hard
-                    </option>
+                    <option value="All">All</option>
+                    <option value="Easy">Easy</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Hard">Hard</option>
 
                 </select>
-            </form>
+
+            </div>
 
         </section>
 
-        {% if messages %}
-            {% for message in messages %}
-                <div class="submission-message">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
 
-        <section class="questions-list">
+        <!-- API Messages -->
+        <div id="apiMessage" class="submission-message" hidden></div>
 
-            {% for q in questions %}
 
-                <div class="coding-question-card">
+        <!-- Questions List -->
+        <section
+            class="questions-list"
+            id="questionsList"
+            data-submit-url="{% url 'coding' %}"
+        >
 
-                    <div class="question-content">
-
-                        <h3>{{ q.title }}</h3>
-
-                        <p>{{ q.description }}</p>
-
-                        <span class="difficulty-badge difficulty-{{ q.difficulty|lower }}">
-                            {{ q.difficulty }}
-                        </span>
-
-                    </div>
-
-                    <div class="question-actions">
-
-                        <a href="{% url 'edit_question' q.id %}"
-                           class="edit-question-btn">
-                            Edit
-                        </a>
-
-                        <form method="POST"
-                              action="{% url 'delete_question' q.id %}">
-                            {% csrf_token %}
-
-                            <button type="submit"
-                                    class="delete-question-btn"
-                                    onclick="return confirm('Are you sure you want to delete this question?')">
-                                Delete
-                            </button>
-                        </form>
-
-                    </div>
-
-                    <!-- Python Code Editor -->
-
-                    <div class="python-editor">
-
-                        <h3>Write Your Python Code</h3>
-
-                        <form method="POST" action="{% url 'coding' %}">
-
-                            {% csrf_token %}
-
-                            <input type="hidden"
-                                   name="question_id"
-                                   value="{{ q.id }}">
-
-                            <input type="hidden"
-                                   name="difficulty"
-                                   value="{{ selected_difficulty }}">
-
-                            <textarea
-                                name="submitted_code"
-                                class="python-code-input"
-                                placeholder="# Write your Python code here..."
-                                required></textarea>
-
-                            <button type="submit" class="submit-code-btn">
-                                Submit Code
-                            </button>
-
-                        </form>
-
-                    </div>
-
-                </div>
-
-            {% empty %}
-
-                <div class="empty-questions">
-                    <h3>No Questions Available</h3>
-
-                    <p>There are no questions for this difficulty level.</p>
-
-                    <a href="{% url 'add_question' %}" class="add-question-btn">
-                        Add Your First Question
-                    </a>
-                </div>
-
-            {% endfor %}
+            <p>Loading questions...</p>
 
         </section>
 
     </main>
 
+
+    <!-- Add / Edit Question Dialog -->
+    <dialog id="questionDialog">
+
+        <h2 id="dialogTitle">
+            Add New Question
+        </h2>
+
+        <form id="questionForm">
+
+            <input type="hidden" id="questionId">
+
+
+            <label for="questionTitle">
+                Question Title
+            </label>
+
+            <input
+                type="text"
+                id="questionTitle"
+                placeholder="Enter question title"
+                required
+            >
+
+
+            <label for="questionDescription">
+                Description
+            </label>
+
+            <textarea
+                id="questionDescription"
+                placeholder="Enter question description"
+                required
+            ></textarea>
+
+
+            <label for="questionDifficulty">
+                Difficulty
+            </label>
+
+            <select id="questionDifficulty" required>
+
+                <option value="Easy">Easy</option>
+                <option value="Medium">Medium</option>
+                <option value="Hard">Hard</option>
+
+            </select>
+
+
+            <label for="sampleInput">
+                Sample Input
+            </label>
+
+            <textarea
+                id="sampleInput"
+                placeholder="Enter sample input"
+                required
+            ></textarea>
+
+
+            <label for="sampleOutput">
+                Sample Output
+            </label>
+
+            <textarea
+                id="sampleOutput"
+                placeholder="Enter sample output"
+                required
+            ></textarea>
+
+
+            <div class="dialog-actions">
+
+                <button type="submit" class="add-question-btn">
+                    Save Question
+                </button>
+
+                <button
+                    type="button"
+                    id="closeQuestionDialog"
+                >
+                    Cancel
+                </button>
+
+            </div>
+
+        </form>
+
+    </dialog>
+
+
+    <!-- CSRF Token for existing code submission -->
+    <form id="csrfTokenForm" hidden>
+        {% csrf_token %}
+    </form>
+
+
+    <!-- Footer -->
     <footer class="coding-footer">
+
         © 2026 CodePractice. All rights reserved.
+
     </footer>
+
+
+    <!-- JavaScript -->
+    <script src="{% static 'accounts/js/questions.js' %}"></script>
 
 </body>
 </html>
