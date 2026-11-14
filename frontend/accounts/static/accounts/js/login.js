@@ -1,8 +1,11 @@
 
+console.log("Login JS loaded successfully!");
+
 const API_URL = "http://127.0.0.1:8000/api/login/";
 
 const loginForm = document.getElementById("loginForm");
 const loginMessage = document.getElementById("loginMessage");
+const loginButton = loginForm.querySelector('button[type="submit"]');
 
 loginForm.addEventListener("submit", async function (event) {
     event.preventDefault();
@@ -10,10 +13,9 @@ loginForm.addEventListener("submit", async function (event) {
     const username = document.getElementById("id_username").value.trim();
     const password = document.getElementById("id_password").value;
 
-    const userData = {
-        username: username,
-        password: password
-    };
+    loginMessage.hidden = false;
+    loginMessage.textContent = "Please wait...";
+    loginButton.disabled = true;
 
     try {
         const response = await fetch(API_URL, {
@@ -21,7 +23,10 @@ loginForm.addEventListener("submit", async function (event) {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(userData)
+            body: JSON.stringify({
+                username: username,
+                password: password
+            })
         });
 
         const data = await response.json();
@@ -34,21 +39,17 @@ loginForm.addEventListener("submit", async function (event) {
             );
         }
 
-        // Save token in browser
         localStorage.setItem("authToken", data.token);
-
-        // Save user information
         localStorage.setItem("user", JSON.stringify(data.user));
 
-        loginMessage.textContent = "Login successful!";
-        loginMessage.hidden = false;
+        loginMessage.textContent =
+            "Login successful! Opening Coding Page...";
 
-        console.log("Login API Response:", data);
+        window.location.replace("/accounts/coding/");
 
     } catch (error) {
-        loginMessage.textContent = error.message;
-        loginMessage.hidden = false;
-
         console.error("Login Error:", error);
+        loginMessage.textContent = error.message;
+        loginButton.disabled = false;
     }
 });

@@ -60,10 +60,15 @@
                 Login
             </button>
 
+        <p>
+               Don't have an account?
+               <a href="{% url 'register' %}">Register</a>
+        </p>   
+
         </form>
 
 
-        <p class="register-link">
+        {% comment %} <p class="register-link">
 
             Don't have an account?
 
@@ -71,7 +76,7 @@
                 Register
             </a>
 
-        </p>
+        </p> {% endcomment %}
 
     </div>
 

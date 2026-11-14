@@ -1,6 +1,5 @@
 
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,7 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Create Account</title>
+    <title>Create Account | CodePractice</title>
 
     <link rel="stylesheet" href="{% static 'accounts/css/style.css' %}">
 </head>
@@ -87,22 +86,17 @@
             <div id="registerMessage" class="error" hidden></div>
 
 
-            <button type="submit">
+            <button type="submit" id="registerButton">
                 Register
             </button>
 
+
+            <p>
+                Already have an account?
+                <a href="/accounts/login/">Login</a>
+            </p>
+
         </form>
-
-
-        <p class="login-link">
-
-            Already have an account?
-
-            <a href="/accounts/login/">
-                Login
-            </a>
-
-        </p>
 
     </div>
 

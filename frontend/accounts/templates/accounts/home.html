@@ -1,8 +1,8 @@
 
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,19 +14,30 @@
 
 <body>
 
+    <!-- Navbar -->
     <nav class="navbar">
-        <div class="logo">CodePractice</div>
 
-        <form method="POST" action="{% url 'logout' %}">
-            {% csrf_token %}
-            <button type="submit" class="logout-btn">Logout</button>
+        <div class="logo">
+            CodePractice
+        </div>
+
+        <form id="logoutForm">
+            <button type="submit" class="logout-btn">
+                Logout
+            </button>
         </form>
+
     </nav>
 
+
+    <!-- Dashboard -->
     <main class="dashboard">
 
         <section class="welcome">
-            <h1>Welcome, {{ request.user.username }}!</h1>
+
+            <h1>
+                Welcome, <span id="username">Student</span>!
+            </h1>
 
             <p>
                 Welcome to your coding dashboard.
@@ -36,33 +47,43 @@
             <a href="{% url 'coding' %}" class="start-btn">
                 Start Coding →
             </a>
+
         </section>
 
-        <h2 class="section-title">Dashboard Overview</h2>
+
+        <h2 class="section-title">
+            Dashboard Overview
+        </h2>
+
 
         <section class="cards">
 
             <div class="card">
                 <h3>💻 Coding Practice</h3>
+
                 <p>
                     Practice different programming questions
                     and improve your coding knowledge.
                 </p>
             </div>
 
+
             <div class="card">
                 <h3>📚 Python Questions</h3>
+
                 <p>
                     Learn Python by solving questions
                     from different difficulty levels.
                 </p>
             </div>
 
+
             <div class="card">
                 <h3>🎯 Improve Skills</h3>
+
                 <p>
-                    Develop problem-solving skills through
-                    regular coding practice.
+                    Develop problem-solving skills
+                    through regular coding practice.
                 </p>
             </div>
 
@@ -70,9 +91,41 @@
 
     </main>
 
+
+    <!-- Footer -->
     <footer>
         © 2026 CodePractice. All rights reserved.
     </footer>
+
+
+    <!-- Authentication Check -->
+    <script src="{% static 'accounts/js/auth.js' %}"></script>
+
+    <!-- Logout JavaScript -->
+    <script src="{% static 'accounts/js/logout.js' %}"></script>
+
+
+    <!-- Display Username -->
+    <script>
+        const userData = localStorage.getItem("user");
+
+        if (userData) {
+
+            try {
+
+                const user = JSON.parse(userData);
+
+                document.getElementById("username").textContent =
+                    user.username || "Student";
+
+            } catch (error) {
+
+                console.error("User Data Error:", error);
+
+            }
+
+        }
+    </script>
 
 </body>
 </html>

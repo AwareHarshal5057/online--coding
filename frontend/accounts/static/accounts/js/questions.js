@@ -2,14 +2,16 @@
 console.log("Questions JS loaded successfully!");
 
 const API_URL = "http://127.0.0.1:8000/api/questions/";
+const SUBMISSIONS_URL = "http://127.0.0.1:8000/api/submissions/";
 
 const questionsList = document.getElementById("questionsList");
-const difficultyFilter = document.getElementById("difficulty");
+const difficultyFilter = document.getElementById("difficultyFilter");
 const apiMessage = document.getElementById("apiMessage");
 
-const openAddQuestion = document.getElementById("openAddQuestion");
+const addQuestionBtn = document.getElementById("addQuestionBtn");
 const questionDialog = document.getElementById("questionDialog");
-const closeQuestionDialog = document.getElementById("closeQuestionDialog");
+const closeDialogBtn = document.getElementById("closeDialogBtn");
+const cancelDialogBtn = document.getElementById("cancelDialogBtn");
 
 const questionForm = document.getElementById("questionForm");
 const dialogTitle = document.getElementById("dialogTitle");
@@ -21,23 +23,38 @@ const questionDifficulty = document.getElementById("questionDifficulty");
 const sampleInput = document.getElementById("sampleInput");
 const sampleOutput = document.getElementById("sampleOutput");
 
-const csrfToken = document.querySelector(
-    '#csrfTokenForm [name="csrfmiddlewaretoken"]'
-)?.value;
-
 let allQuestions = [];
+let messageTimer;
+
+
+// Get authentication token
+function getToken() {
+    return localStorage.getItem("authToken");
+}
 
 
 // Show message
-function showMessage(message) {
+function showMessage(message, type = "success") {
+
     apiMessage.textContent = message;
     apiMessage.hidden = false;
+
+    apiMessage.classList.remove("success", "error");
+    apiMessage.classList.add(type);
+
+    clearTimeout(messageTimer);
+
+    messageTimer = setTimeout(function () {
+        apiMessage.hidden = true;
+    }, 5000);
 }
 
 
 // Escape HTML
 function escapeHTML(value) {
+
     return String(value ?? "").replace(/[&<>"']/g, function (character) {
+
         return {
             "&": "&amp;",
             "<": "&lt;",
@@ -45,29 +62,54 @@ function escapeHTML(value) {
             '"': "&quot;",
             "'": "&#039;"
         }[character];
+
     });
+}
+
+
+// API response handling
+async function getResponseData(response) {
+
+    const text = await response.text();
+
+    if (!text) {
+        return {};
+    }
+
+    try {
+        return JSON.parse(text);
+    } catch {
+        return { message: text };
+    }
 }
 
 
 // Load questions from backend
 async function loadQuestions() {
+
     try {
+
         questionsList.innerHTML = "<p>Loading questions...</p>";
 
         const response = await fetch(API_URL);
 
+        const data = await getResponseData(response);
+
         if (!response.ok) {
-            throw new Error("Unable to load questions");
+            throw new Error("Unable to load questions.");
         }
 
-        allQuestions = await response.json();
+        allQuestions = Array.isArray(data) ? data : data.results || [];
 
         renderQuestions();
 
     } catch (error) {
-        console.error("Error:", error);
+
+        console.error("Questions Error:", error);
 
         questionsList.innerHTML = "<p>Failed to load questions.</p>";
+
+        showMessage(error.message, "error");
     }
 }
 
@@ -85,12 +127,14 @@ function renderQuestions() {
     });
 
     if (filteredQuestions.length === 0) {
+
         questionsList.innerHTML = `
             <div class="empty-questions">
                 <h3>No Questions Available</h3>
                 <p>There are no questions for this difficulty level.</p>
             </div>
         `;
+
         return;
     }
 
@@ -98,6 +142,7 @@ function renderQuestions() {
 
         const id = Number(question.id);
         const difficulty = escapeHTML(question.difficulty);
+
         const safeDifficulty = ["Easy", "Medium", "Hard"].includes(difficulty)
             ? difficulty.toLowerCase()
             : "easy";
@@ -151,25 +196,12 @@ function renderQuestions() {
 
                     <h3>Write Your Python Code</h3>
 
-                    <form method="POST"
-                          action="${questionsList.dataset.submitUrl}">
-
-                        <input
-                            type="hidden"
-                            name="csrfmiddlewaretoken"
-                            value="${escapeHTML(csrfToken)}"
-                        >
+                    <form class="code-submit-form">
 
                         <input
                             type="hidden"
                             name="question_id"
                             value="${id}"
-                        >
-
-                        <input
-                            type="hidden"
-                            name="difficulty"
-                            value="${difficulty}"
                         >
 
                         <textarea
@@ -194,8 +226,95 @@ function renderQuestions() {
 }
 
 
+// Submit Code to Backend
+questionsList.addEventListener("submit", async function (event) {
+
+    if (!event.target.matches(".code-submit-form")) {
+        return;
+    }
+
+    event.preventDefault();
+
+    const form = event.target;
+
+    const submitButton = form.querySelector(".submit-code-btn");
+    const textarea = form.querySelector("textarea");
+
+    const id = form.querySelector(
+        'input[name="question_id"]'
+    ).value;
+
+    const submittedCode = textarea.value.trim();
+    const token = getToken();
+
+    if (!token) {
+        showMessage("Please login again.", "error");
+        window.location.href = "/accounts/login/";
+        return;
+    }
+
+    if (!submittedCode) {
+        showMessage("Please write your Python code first.", "error");
+        return;
+    }
+
+    submitButton.disabled = true;
+    submitButton.textContent = "Submitting...";
+
+    try {
+
+        const response = await fetch(SUBMISSIONS_URL, {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Token ${token}`
+            },
+
+            body: JSON.stringify({
+                question: Number(id),
+                submitted_code: submittedCode
+            })
+
+        });
+
+        const data = await getResponseData(response);
+
+        if (!response.ok) {
+            throw new Error(
+                data.detail ||
+                data.error ||
+                data.message ||
+                "Code submission failed."
+            );
+        }
+
+        showMessage(
+            "Your code has been submitted successfully!",
+            "success"
+        );
+
+        textarea.value = "";
+
+    } catch (error) {
+
+        console.error("Submission Error:", error);
+
+        showMessage(error.message, "error");
+
+    } finally {
+
+        submitButton.disabled = false;
+        submitButton.textContent = "Submit Code";
+
+    }
+
+});
+
+
 // Open Add Question Dialog
-openAddQuestion.addEventListener("click", function () {
+addQuestionBtn.addEventListener("click", function () {
 
     questionForm.reset();
 
@@ -209,11 +328,13 @@ openAddQuestion.addEventListener("click", function () {
 
 
 // Close Dialog
-closeQuestionDialog.addEventListener("click", function () {
-
+function closeQuestionDialog() {
     questionDialog.close();
+}
 
-});
+closeDialogBtn.addEventListener("click", closeQuestionDialog);
+
+cancelDialogBtn.addEventListener("click", closeQuestionDialog);
 
 
 // Edit and Delete Questions
@@ -221,19 +342,32 @@ questionsList.addEventListener("click", async function (event) {
 
     const button = event.target.closest("button[data-action]");
 
-    if (!button) return;
+    if (!button) {
+        return;
+    }
 
     const id = Number(button.dataset.id);
-
     const action = button.dataset.action;
 
+    const token = getToken();
+
+    if (!token) {
+        showMessage("Please login again.", "error");
+        window.location.href = "/accounts/login/";
+        return;
+    }
+
+
+    // Edit Question
     if (action === "edit") {
 
         const question = allQuestions.find(function (item) {
-            return item.id === id;
+            return Number(item.id) === id;
         });
 
-        if (!question) return;
+        if (!question) {
+            return;
+        }
 
         questionId.value = question.id;
         questionTitle.value = question.title;
@@ -249,33 +383,46 @@ questionsList.addEventListener("click", async function (event) {
     }
 
 
+    // Delete Question
     if (action === "delete") {
 
         const confirmed = confirm(
             "Are you sure you want to delete this question?"
         );
 
-        if (!confirmed) return;
+        if (!confirmed) {
+            return;
+        }
+
+        button.disabled = true;
 
         try {
 
             const response = await fetch(`${API_URL}${id}/`, {
-                method: "DELETE"
+
+                method: "DELETE",
+
+                headers: {
+                    "Authorization": `Token ${token}`
+                }
+
             });
 
             if (!response.ok) {
-                throw new Error("Question deletion failed");
+                throw new Error("Question deletion failed.");
             }
 
-            showMessage("Question deleted successfully!");
+            showMessage("Question deleted successfully!", "success");
 
             await loadQuestions();
 
         } catch (error) {
 
-            console.error(error);
+            console.error("Delete Error:", error);
 
-            showMessage("Unable to delete question.");
+            showMessage(error.message, "error");
+
+            button.disabled = false;
 
         }
 
@@ -288,6 +435,14 @@ questionsList.addEventListener("click", async function (event) {
 questionForm.addEventListener("submit", async function (event) {
 
     event.preventDefault();
+
+    const token = getToken();
+
+    if (!token) {
+        showMessage("Please login again.", "error");
+        window.location.href = "/accounts/login/";
+        return;
+    }
 
     const id = questionId.value;
 
@@ -307,7 +462,12 @@ questionForm.addEventListener("submit", async function (event) {
 
     const url = id ? `${API_URL}${id}/` : API_URL;
 
-    const method = id ? "PUT" : "POST";
+    const method = id ? "PATCH" : "POST";
+
+    const saveButton = document.getElementById("saveQuestionBtn");
+
+    saveButton.disabled = true;
+    saveButton.textContent = "Saving...";
 
     try {
 
@@ -316,17 +476,22 @@ questionForm.addEventListener("submit", async function (event) {
             method: method,
 
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization": `Token ${token}`
             },
 
             body: JSON.stringify(questionData)
 
         });
 
-        const data = await response.json();
+        const data = await getResponseData(response);
 
         if (!response.ok) {
-            throw new Error(JSON.stringify(data));
+
+            throw new Error(
+                JSON.stringify(data)
+            );
+
         }
 
         questionDialog.close();
@@ -338,16 +503,22 @@ questionForm.addEventListener("submit", async function (event) {
         showMessage(
             id
                 ? "Question updated successfully!"
-                : "Question added successfully!"
+                : "Question added successfully!",
+            "success"
         );
 
         await loadQuestions();
 
     } catch (error) {
 
-        console.error(error);
+        console.error("Save Question Error:", error);
 
-        showMessage("Unable to save question. Check the entered details.");
+        showMessage(error.message, "error");
+
+    } finally {
+
+        saveButton.disabled = false;
+        saveButton.textContent = "Save Question";
 
     }
 
@@ -356,13 +527,11 @@ questionForm.addEventListener("submit", async function (event) {
 
 // Difficulty Filter
 difficultyFilter.addEventListener("change", function () {
-
     renderQuestions();
-
 });
 
 
 // Initial API Call
 loadQuestions();
 
-console.log("NEW JAVASCRIPT CODE RUNNING!");
+console.log("NEW QUESTIONS JAVASCRIPT RUNNING!");

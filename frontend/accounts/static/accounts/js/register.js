@@ -5,7 +5,6 @@ const registerForm = document.getElementById("registerForm");
 const registerMessage = document.getElementById("registerMessage");
 
 registerForm.addEventListener("submit", async function (event) {
-
     event.preventDefault();
 
     const username = document.getElementById("id_username").value.trim();
@@ -13,7 +12,6 @@ registerForm.addEventListener("submit", async function (event) {
     const password = document.getElementById("id_password").value;
     const password2 = document.getElementById("id_password2").value;
 
-    // Check password
     if (password !== password2) {
         registerMessage.textContent = "Passwords do not match!";
         registerMessage.hidden = false;
@@ -26,50 +24,47 @@ registerForm.addEventListener("submit", async function (event) {
         password: password
     };
 
+    registerMessage.hidden = false;
+    registerMessage.textContent = "Please wait...";
+
     try {
-
         const response = await fetch(API_URL, {
-
             method: "POST",
-
             headers: {
                 "Content-Type": "application/json"
             },
-
             body: JSON.stringify(userData)
-
         });
 
         const data = await response.json();
 
         if (!response.ok) {
-
             const errors = Object.entries(data)
                 .map(([field, messages]) => {
                     return `${field}: ${
-                        Array.isArray(messages) ? messages.join(", ") : messages
+                        Array.isArray(messages)
+                            ? messages.join(", ")
+                            : messages
                     }`;
                 })
                 .join(" | ");
 
             throw new Error(errors || "Registration failed.");
-
         }
 
-        registerMessage.textContent = "Registration successful!";
-        registerMessage.hidden = false;
+        registerMessage.textContent =
+            "Registration successful! Redirecting to Login...";
 
         registerForm.reset();
 
-        console.log("Register API Response:", data);
+        setTimeout(() => {
+            window.location.href = "/accounts/login/";
+        }, 1000);
 
     } catch (error) {
-
         registerMessage.textContent = error.message;
         registerMessage.hidden = false;
 
         console.error("Register Error:", error);
-
     }
-
 });

@@ -1,6 +1,5 @@
 
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -17,7 +16,6 @@
 
     <!-- Navbar -->
     <nav class="coding-navbar">
-
         <div class="coding-logo">
             CodePractice
         </div>
@@ -25,78 +23,56 @@
         <a href="{% url 'home' %}" class="nav-home-btn">
             Dashboard
         </a>
-
     </nav>
-
 
     <main class="coding-container">
 
         <!-- Page Header -->
         <section class="coding-header">
-
             <div>
                 <h1>Coding Practice</h1>
-
                 <p>
                     Practice Python questions and improve your programming skills.
                 </p>
             </div>
 
-            <button type="button" class="add-question-btn" id="openAddQuestion">
+            <button type="button" class="add-question-btn" id="addQuestionBtn">
                 + Add New Question
             </button>
-
         </section>
-
 
         <!-- Difficulty Filter -->
         <section class="filter-section">
-
             <div>
                 <h3>Practice Questions</h3>
-
                 <p>
                     Select a difficulty level to explore questions.
                 </p>
             </div>
 
             <div class="difficulty-form">
-
-                <label for="difficulty">
+                <label for="difficultyFilter">
                     Difficulty Level
                 </label>
 
-                <select id="difficulty">
-
+                <select id="difficultyFilter">
                     <option value="All">All</option>
                     <option value="Easy">Easy</option>
                     <option value="Medium">Medium</option>
                     <option value="Hard">Hard</option>
-
                 </select>
-
             </div>
-
         </section>
-
 
         <!-- API Messages -->
         <div id="apiMessage" class="submission-message" hidden></div>
 
-
         <!-- Questions List -->
-        <section
-            class="questions-list"
-            id="questionsList"
-            data-submit-url="{% url 'coding' %}"
-        >
-
+        <section class="questions-list" id="questionsList">
             <p>Loading questions...</p>
-
         </section>
 
     </main>
-
 
     <!-- Add / Edit Question Dialog -->
     <dialog id="questionDialog">
@@ -109,7 +85,6 @@
 
             <input type="hidden" id="questionId">
 
-
             <label for="questionTitle">
                 Question Title
             </label>
@@ -121,7 +96,6 @@
                 required
             >
 
-
             <label for="questionDescription">
                 Description
             </label>
@@ -132,19 +106,15 @@
                 required
             ></textarea>
 
-
             <label for="questionDifficulty">
                 Difficulty
             </label>
 
             <select id="questionDifficulty" required>
-
                 <option value="Easy">Easy</option>
                 <option value="Medium">Medium</option>
                 <option value="Hard">Hard</option>
-
             </select>
-
 
             <label for="sampleInput">
                 Sample Input
@@ -156,7 +126,6 @@
                 required
             ></textarea>
 
-
             <label for="sampleOutput">
                 Sample Output
             </label>
@@ -167,7 +136,6 @@
                 required
             ></textarea>
 
-
             <div class="dialog-actions">
 
                 <button type="submit" class="add-question-btn">
@@ -176,7 +144,14 @@
 
                 <button
                     type="button"
-                    id="closeQuestionDialog"
+                    id="closeDialogBtn"
+                >
+                    Close
+                </button>
+
+                <button
+                    type="button"
+                    id="cancelDialogBtn"
                 >
                     Cancel
                 </button>
@@ -187,22 +162,18 @@
 
     </dialog>
 
-
-    <!-- CSRF Token for existing code submission -->
+    <!-- CSRF Token -->
     <form id="csrfTokenForm" hidden>
         {% csrf_token %}
     </form>
 
-
     <!-- Footer -->
     <footer class="coding-footer">
-
         © 2026 CodePractice. All rights reserved.
-
     </footer>
 
-
     <!-- JavaScript -->
+    <script src="{% static 'accounts/js/auth.js' %}"></script>
     <script src="{% static 'accounts/js/questions.js' %}"></script>
 
 </body>
